@@ -17,13 +17,13 @@ namespace SGEGWebClient
         protected void Button1_Click(object sender, EventArgs e)
         {
             SGEGService.SGEGPublicServiceClient client = new SGEGService.SGEGPublicServiceClient("BasicHttpBinding_ISGEGPublicService");
-            Label1.Text = client.GetPublicMessage();
+            //Label1.Text = client.GetPublicMessage();
         }
 
         protected void Button2_Click(object sender, EventArgs e)
         {
             SGEGService.SGEGPrivateServiceClient client = new SGEGService.SGEGPrivateServiceClient("NetTcpBinding_ISGEGPrivateService");
-            Label2.Text = client.GetPrivateMessage();
+            //Label2.Text = client.GetPrivateMessage();
         }
     }
 }
