@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace SGEGService.Data
 {
-    [DataContract(Namespace = "http://SGEGService.com/Product")]
+    [DataContract]
     class Product
     {
         [DataMember]
