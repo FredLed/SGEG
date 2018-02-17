@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGEGService", "SGEGService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGEGServiceHost", "SGEGServiceHost\SGEGServiceHost.csproj", "{306DBAA3-983C-456A-AFF3-B1809A7542E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGEGUnitTest", "SGEGUnitTest\SGEGUnitTest.csproj", "{1C29F491-96F8-4E89-BFD0-309D041ABE26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{306DBAA3-983C-456A-AFF3-B1809A7542E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{306DBAA3-983C-456A-AFF3-B1809A7542E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{306DBAA3-983C-456A-AFF3-B1809A7542E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C29F491-96F8-4E89-BFD0-309D041ABE26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C29F491-96F8-4E89-BFD0-309D041ABE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C29F491-96F8-4E89-BFD0-309D041ABE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C29F491-96F8-4E89-BFD0-309D041ABE26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

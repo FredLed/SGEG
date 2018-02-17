@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using SGEGService.Model.Interface;
 
-namespace SGEGService.Data
+namespace SGEGService.Model
 {
     [DataContract]
-    class Product
+    class Product : IProduct
     {
         [DataMember]
-        public string ID { get; set; }
+        public Guid ID { get; set; }
 
         [DataMember]
         public string Name { get; set; }

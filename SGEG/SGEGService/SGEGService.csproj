@@ -43,14 +43,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Product.cs" />
-    <Compile Include="Data\User.cs" />
+    <Compile Include="Controller\ProductController.cs" />
+    <Compile Include="Controller\UserController.cs" />
+    <Compile Include="Model\Interface\IDBConnection.cs" />
+    <Compile Include="Model\Interface\IProduct.cs" />
+    <Compile Include="Model\Interface\IProductController.cs" />
+    <Compile Include="Model\Interface\IProductRepo.cs" />
+    <Compile Include="Model\Interface\IUser.cs" />
+    <Compile Include="Model\Interface\IUserController.cs" />
+    <Compile Include="Model\Interface\IUserRepo.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="ISGEGService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\SQLRepo\SQLDBConnection.cs" />
+    <Compile Include="Repository\SQLRepo\SQLProductRepo.cs" />
+    <Compile Include="Repository\SQLRepo\SQLUserRepo.cs" />
     <Compile Include="SGEGService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
