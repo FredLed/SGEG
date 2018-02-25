@@ -160,17 +160,17 @@ namespace SGEGService.Repository.SQLRepo
             {
                 var ID = SQLDbHelper.GetGuid(dr, "ID");
                 var name = SQLDbHelper.GetValueOrDefault(dr, "Name", "");
-                var parentCategory = Caterogies.First(c => c.ID == SQLDbHelper.GetGuid(dr, "ParentID"));
+                //var parentCategory = Caterogies.First(c => c.ID == SQLDbHelper.GetGuid(dr, "ParentID"));
                 var description = SQLDbHelper.GetValueOrDefault(dr, "Description", "");
-                var subCategories = GetSubCategoriesByID(ID);
+                //var subCategories = GetSubCategoriesByID(ID);
 
                 return new Category()
                 {
                     ID = ID,
                     Name = name,
-                    ParentCategory = parentCategory,
+                    //ParentCategory = parentCategory,
                     Description = description,
-                    SubCategories = subCategories
+                    //SubCategories = subCategories
                 };
             }
             catch (Exception ex)
