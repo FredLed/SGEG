@@ -1,15 +1,15 @@
-﻿using System;
+﻿using SGEGService.Model.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Serialization;
-using SGEGService.Model.Interface;
 
 namespace SGEGService.Model
 {
     [DataContract]
-    public class Product : IProduct
+    public class Category : ICategory
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -18,18 +18,12 @@ namespace SGEGService.Model
         public string Name { get; set; }
 
         [DataMember]
-        public double MSRP { get; set; }
-
-        [DataMember]
         public string Description { get; set; }
 
         [DataMember]
-        public DateTime CreationDate { get; set; }
+        public ICategory ParentCategory { get; set; }
 
         [DataMember]
-        public string CUP { get; set; }
-
-        [DataMember]
-        public ICategory Category { get; set; }
+        public List<ICategory> SubCategories { get; set; }
     }
 }

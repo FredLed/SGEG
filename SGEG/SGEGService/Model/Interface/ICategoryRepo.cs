@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace SGEGService.Model.Interface
 {
-    interface IUserController
+    public interface ICategoryRepo
     {
+        List<ICategory> Caterogies { get; }
+
+        bool SaveCategory(ICategory category);
+
+        bool DeleteCategoryByID(Guid id);
     }
 }

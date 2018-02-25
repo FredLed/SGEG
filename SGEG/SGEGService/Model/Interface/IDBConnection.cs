@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace SGEGService.Model.Interface
 {
-    interface IDBConnection
+    interface IDbConnection
     {
-        string connectionString { get; }
+        SqlConnection Connection { get; }
     }
 }

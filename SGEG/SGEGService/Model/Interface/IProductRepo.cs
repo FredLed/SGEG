@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SGEGService.Model.Interface
 {
-    interface IProductRepo
+    public interface IProductRepo
     {
-        IEnumerable<IProduct> Products { get; }
+        List<IProduct> Products { get; }
 
         bool SaveProduct(IProduct product);
 

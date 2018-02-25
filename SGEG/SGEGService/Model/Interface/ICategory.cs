@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace SGEGService.Model.Interface
 {
-    public interface IProduct
+    public interface ICategory
     {
         Guid ID { get; }
 
         string Name { get; }
 
-        double MSRP { get; }
-
         string Description { get; }
 
-        DateTime CreationDate { get; }
+        ICategory ParentCategory { get; }
 
-        string CUP { get; }
-
-        ICategory Category { get; }
+        List<ICategory> SubCategories { get; }
     }
 }

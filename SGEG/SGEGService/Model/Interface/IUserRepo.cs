@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SGEGService.Model.Interface
 {
-    interface IUserRepo
+    public interface IUserRepo
     {
-        IEnumerable<IUser> Users { get; }
+        List<IUser> Users { get; }
 
         bool SaveUser(IUser user);
 

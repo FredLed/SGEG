@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SGEGService.Model.Interface
 {
-    interface IUser
+    public interface IUser
     {
         Guid ID { get; }
 
@@ -17,5 +17,7 @@ namespace SGEGService.Model.Interface
         string Email { get; }
 
         string Address { get; }
+
+        DateTime CreationDate { get; }
     }
 }

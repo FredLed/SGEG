@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using SGEGService.Model.Interface;
 
-namespace SGEGService.Data
+namespace SGEGService.Model
 {
     [DataContract]
-    class User : IUser
+    public class User : IUser
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -23,6 +23,10 @@ namespace SGEGService.Data
         [DataMember]
         public string Email { get; set; }
 
+        [DataMember]
         public string Address { get; set; }
+
+        [DataMember]
+        public DateTime CreationDate { get; set; }
     }
 }
