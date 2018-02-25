@@ -1,5 +1,6 @@
 ﻿using SGEGService.Model;
 using SGEGService.Model.Interface;
+using SGEGService.Repository.SQLRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,21 @@ namespace Tests.RepoTests
                 Description = "Pow pow"
             };
         }
+
+        static public IItem CreateValidItem()
+        {
+            var product = (new SQLProductRepo()).Products.FirstOrDefault();
+
+            return new Item()
+            {
+                ID = Guid.NewGuid(),
+                Cost = 123123.123123,
+                CreationDate = DateTime.Now,
+                Product = product,
+                ReceptionDate = DateTime.Now,
+                SerialNumber = "NANANANANA"
+            };
+        }
         #endregion
 
 
@@ -63,6 +79,11 @@ namespace Tests.RepoTests
         static public bool Compare(ICategory data1, ICategory data2)
         {
             return false; //TODO
+        }
+
+        static public bool Compare(IItem data1, IItem data2)
+        {
+            return false;
         }
         #endregion
     }

@@ -27,7 +27,10 @@ namespace SGEGService.Repository.SQLRepo
 
                     while (dr.Read())
                     {
-                        categories.Add(ParseCategory(dr));
+                        var category = ParseCategory(dr);
+                        category.ParentCategory = GetCategoryByID(category.ParentCategory.ID);
+                        category.SubCategories = GetSubCategoriesByID(category.ID);
+                        categories.Add(category);
                     }
 
                     dr.Close();
@@ -74,6 +77,40 @@ namespace SGEGService.Repository.SQLRepo
                     throw;
                 }
             }
+        }
+        
+
+        public ICategory GetCategoryByID(Guid id)
+        {
+            ICategory category = new Category();
+            string sql = "SELECT * FROM " + SQLDbHelper.CategoryTable + " WHERE ID = @ID";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("ID", id);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        category = ParseCategory(dr);
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return category;
         }
 
         public List<ICategory> GetSubCategoriesByID(Guid id)
@@ -140,7 +177,17 @@ namespace SGEGService.Repository.SQLRepo
                     command.Dispose();
                     con.Close();
 
-                    if (rowCount == 0)
+                    List<bool> results = new List<bool>();
+                    if (!isMainCategory)
+                    { 
+                        if (category.ParentCategory != null)
+                            SaveCategory(category.ParentCategory);
+                    }
+
+                    if (category.SubCategories != null && category.SubCategories.Count != 0)
+                        category.SubCategories.ForEach(c => results.Add(SaveCategory(c)));
+
+                    if (rowCount == 0 || results.Contains(false))
                     {
                         return false;
                     }
@@ -154,13 +201,20 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
+        /// <summary>
+        /// Read category informations from DB.
+        /// Does not completly set Parent Category, only the id.
+        /// Does not set subCategories, would cause redundant function call.
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns></returns>
         public Category ParseCategory(SqlDataReader dr)
         {
             try
             {
                 var ID = SQLDbHelper.GetGuid(dr, "ID");
                 var name = SQLDbHelper.GetValueOrDefault(dr, "Name", "");
-                //var parentCategory = Caterogies.First(c => c.ID == SQLDbHelper.GetGuid(dr, "ParentID"));
+                var parentCategory = new Category() { ID = SQLDbHelper.GetGuid(dr, "ParentID") }; 
                 var description = SQLDbHelper.GetValueOrDefault(dr, "Description", "");
                 //var subCategories = GetSubCategoriesByID(ID);
 
@@ -168,8 +222,8 @@ namespace SGEGService.Repository.SQLRepo
                 {
                     ID = ID,
                     Name = name,
-                    //ParentCategory = parentCategory,
-                    Description = description,
+                    ParentCategory = parentCategory,
+                    Description = description
                     //SubCategories = subCategories
                 };
             }

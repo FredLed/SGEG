@@ -12,6 +12,7 @@ namespace SGEGService.Repository.SQLRepo
         public const string ProductTable = "Products";
         public const string UserTable = "Users";
         public const string CategoryTable = "Categories";
+        public const string ItemTable = "Items";
 
         static public T GetValueOrDefault<T>(this SqlDataReader dr, string colName, T defaultValue)
         {

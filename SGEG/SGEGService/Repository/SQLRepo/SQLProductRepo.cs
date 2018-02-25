@@ -46,6 +46,39 @@ namespace SGEGService.Repository.SQLRepo
 
         public List<IProduct> Products => GetAllProducts();
 
+        public IProduct GetProductByID(Guid id)
+        {
+            IProduct product = new Product();
+            string sql = "SELECT * FROM " + SQLDbHelper.ProductTable + " WHERE ID = @ID";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("ID", id);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        product = ParseProduct(dr);
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return product;
+        }
+
         public bool DeleteProductByID(Guid ID)
         {
             string sql = "DELETE FROM " + SQLDbHelper.ProductTable + " WHERE ID = @ID";

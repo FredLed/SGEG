@@ -47,8 +47,11 @@
     <Compile Include="Model\Interface\ICategory.cs" />
     <Compile Include="Model\Interface\ICategoryRepo.cs" />
     <Compile Include="Model\Interface\IDbConnection.cs" />
+    <Compile Include="Model\Interface\IItem.cs" />
+    <Compile Include="Model\Interface\IItemRepo.cs" />
     <Compile Include="Model\Interface\IProduct.cs" />
     <Compile Include="Model\Interface\IProductRepo.cs" />
+    <Compile Include="Model\Item.cs" />
     <Compile Include="Model\Interface\IUser.cs" />
     <Compile Include="Model\Interface\IUserRepo.cs" />
     <Compile Include="Model\Product.cs" />
@@ -58,6 +61,7 @@
     <Compile Include="Repository\SQLRepo\SQLCategoryRepo.cs" />
     <Compile Include="Repository\SQLRepo\SQLDbConnection.cs" />
     <Compile Include="Repository\SQLRepo\SQLDbHelper.cs" />
+    <Compile Include="Repository\SQLRepo\SQLItemRepo.cs" />
     <Compile Include="Repository\SQLRepo\SQLProductRepo.cs" />
     <Compile Include="Repository\SQLRepo\SQLUserRepo.cs" />
     <Compile Include="SGEGService.cs" />

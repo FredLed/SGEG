@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RepoTests\SQLCategoryRepoTests.cs" />
+    <Compile Include="RepoTests\SQLItemRepoTests.cs" />
     <Compile Include="RepoTests\SQLProductRepoTests.cs" />
     <Compile Include="RepoTests\SQLRepoTestsHelper.cs" />
     <Compile Include="RepoTests\SQLUserRepoTests.cs" />
