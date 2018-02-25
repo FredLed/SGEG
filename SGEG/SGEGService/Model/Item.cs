@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SGEGService.Model
 {
     [DataContract]
+    [KnownType(typeof(IProduct))]
     public class Item : IItem
     {
         [DataMember]

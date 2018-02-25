@@ -13,5 +13,7 @@ namespace SGEGService.Model.Interface
         bool SaveCategory(ICategory category);
 
         bool DeleteCategoryByID(Guid id);
+
+        ICategory GetCategoryByID(Guid id);
     }
 }

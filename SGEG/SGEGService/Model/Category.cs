@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SGEGService.Model
 {
     [DataContract]
+    [KnownType(typeof(ICategory))]
     public class Category : ICategory
     {
         [DataMember]

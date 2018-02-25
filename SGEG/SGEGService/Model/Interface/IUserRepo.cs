@@ -13,5 +13,7 @@ namespace SGEGService.Model.Interface
         bool SaveUser(IUser user);
 
         bool DeleteUserByID(Guid id);
+
+        IUser GetUserByUsername(string username);
     }
 }

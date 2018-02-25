@@ -9,6 +9,7 @@ using SGEGService.Model.Interface;
 namespace SGEGService.Model
 {
     [DataContract]
+    [KnownType(typeof(ICategory))]
     public class Product : IProduct
     {
         [DataMember]

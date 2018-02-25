@@ -13,5 +13,7 @@ namespace SGEGService.Model.Interface
         bool SaveItem(IItem item);
 
         bool DeleteItemByID(Guid id);
+
+        IEnumerable<IItem> GetItemsByProductID(Guid id);
     }
 }

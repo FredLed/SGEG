@@ -113,6 +113,11 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
+        public IEnumerable<IItem> GetItemsByProductID(Guid id)
+        {
+            //TODO
+        }
+
         public Item ParseItem(SqlDataReader dr)
         {
             try
