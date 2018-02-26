@@ -48,7 +48,7 @@ namespace SGEGService.Repository.SQLRepo
 
         public IProduct GetProductByID(Guid id)
         {
-            IProduct product = new Product();
+            IProduct product = null;
             string sql = "SELECT * FROM " + SQLDbHelper.ProductTable + " WHERE ID = @ID";
 
             using (var con = Connection)
@@ -110,10 +110,47 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
-        public bool SaveProduct(IProduct product)
+        public bool UpdateProduct(IProduct product)
+        {
+            string sql = "UPDATE " + SQLDbHelper.ProductTable 
+                            + " SET Name = @name, MSRP = @msrp, Description = @description, CUP = @cup "
+                            + " WHERE ID = @id";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("ID", product.ID);
+                    command.Parameters.AddWithValue("Name", product.Name);
+                    command.Parameters.AddWithValue("MSRP", product.MSRP);
+                    command.Parameters.AddWithValue("Description", product.Description);
+                    command.Parameters.AddWithValue("CUP", product.CUP);
+
+                    con.Open();
+                    int rowCount = command.ExecuteNonQuery();
+
+                    if (rowCount == 0)
+                    {
+                        return false;
+                    }
+
+                    command.Dispose();
+                    con.Close();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public bool InsertProduct(IProduct product)
         {
             string sql = "INSERT INTO " + SQLDbHelper.ProductTable + " (ID,Name,MSRP,Description,CreationDate,CUP) "
-                            + " VALUES (@ID,@Name,@MSRP,@Description,@CreationDate,@CUP)";
+                           + " VALUES (@ID,@Name,@MSRP,@Description,@CreationDate,@CUP)";
 
             using (var con = Connection)
             {
@@ -134,7 +171,7 @@ namespace SGEGService.Repository.SQLRepo
                     {
                         return false;
                     }
-                    
+
                     command.Dispose();
                     con.Close();
 
@@ -145,6 +182,51 @@ namespace SGEGService.Repository.SQLRepo
                     throw;
                 }
             }
+        }
+
+        public bool SaveProduct(IProduct product)
+        {
+            if (GetProductByID(product.ID) == null)
+            {
+                return InsertProduct(product);
+            }
+            else
+            {
+                return UpdateProduct(product);
+            }
+        }
+
+        public IEnumerable<IProduct> GetProductsByCategory(ICategory category)
+        {
+            List<IProduct> products = new List<IProduct>();
+            string sql = "SELECT * FROM " + SQLDbHelper.ProductTable + " WHERE CategoryID = @categoryID";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("categoryID", category.ID);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        products.Add(ParseProduct(dr));
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return products;
         }
 
         private Product ParseProduct(SqlDataReader dr)

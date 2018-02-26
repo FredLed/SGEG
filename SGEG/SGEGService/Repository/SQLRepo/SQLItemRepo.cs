@@ -76,7 +76,89 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
+        public bool UpdateItem(IItem item)
+        {
+            string sql = "UPDATE " + SQLDbHelper.ItemTable 
+                        + " SET ProductID = @productID, Cost = @cost, SerialNumber = @serialNumber, ReceptionDate = @receptionDate "
+                            + " WHERE ID = @id";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("id", item.ID);
+                    command.Parameters.AddWithValue("productID", item?.Product?.ID ?? Guid.Empty);
+                    command.Parameters.AddWithValue("cost", item.Cost);
+                    command.Parameters.AddWithValue("serialNumber", item.SerialNumber);
+                    command.Parameters.AddWithValue("receptionDate", item.ReceptionDate);
+
+                    con.Open();
+                    int rowCount = command.ExecuteNonQuery();
+
+                    if (rowCount == 0)
+                    {
+                        return false;
+                    }
+
+                    command.Dispose();
+                    con.Close();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public IItem GetItemByID(Guid id)
+        {
+            IItem item =  null;
+            string sql = "SELECT * FROM " + SQLDbHelper.ItemTable + " WHERE ID = @id";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("id", id);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        item = ParseItem(dr);
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return item;
+        }
+
         public bool SaveItem(IItem item)
+        {
+            if (GetItemByID(item.ID) == null)
+            {
+                return InsertItem(item);
+            }
+            else
+            {
+                return UpdateItem(item);
+            }
+        }
+
+        private bool InsertItem(IItem item)
         {
             string sql = "INSERT INTO " + SQLDbHelper.ItemTable + " (ID,ProductID,Cost,SerialNumber,CreationDate,ReceptionDate) "
                             + " VALUES (@ID,@productID,@cost,@serialNumber,@creationDate,@receptionDate)";
@@ -115,7 +197,35 @@ namespace SGEGService.Repository.SQLRepo
 
         public IEnumerable<IItem> GetItemsByProductID(Guid id)
         {
-            //TODO
+            List<IItem> items = new List<IItem>();
+            string sql = "SELECT * FROM " + SQLDbHelper.ItemTable + " WHERE ProductID = @productID";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("productID", id);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        items.Add(ParseItem(dr));
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return items;
         }
 
         public Item ParseItem(SqlDataReader dr)

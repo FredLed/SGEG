@@ -27,10 +27,7 @@ namespace SGEGService.Repository.SQLRepo
 
                     while (dr.Read())
                     {
-                        var category = ParseCategory(dr);
-                        category.ParentCategory = GetCategoryByID(category.ParentCategory.ID);
-                        category.SubCategories = GetSubCategoriesByID(category.ID);
-                        categories.Add(category);
+                        categories.Add(ParseCategory(dr));
                     }
 
                     dr.Close();
@@ -50,14 +47,14 @@ namespace SGEGService.Repository.SQLRepo
 
         public bool DeleteCategoryByID(Guid id)
         {
-            string sql = "DELETE FROM " + SQLDbHelper.CategoryTable + " WHERE ID = @ID";
+            string sql = "DELETE FROM " + SQLDbHelper.CategoryTable + " WHERE ID = @id";
 
             using (var con = Connection)
             {
                 try
                 {
                     SqlCommand command = new SqlCommand(sql, con);
-                    command.Parameters.AddWithValue("ID", id);
+                    command.Parameters.AddWithValue("id", id);
 
                     con.Open();
                     int rowCount = command.ExecuteNonQuery();
@@ -79,10 +76,55 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
         
+        public bool UpdateCategory(ICategory category)
+        {
+            bool isMainCategory = false;
+
+
+            string sql = "UPDATE " + SQLDbHelper.CategoryTable 
+                            + " SET Name = @name, Description = @description"
+                            + ((isMainCategory = category.ParentCategory == null || category.ParentCategory.ID == Guid.Empty)
+                            ? " WHERE ID = @id"
+                            : ", ParentID = @parentID WHERE ID = @id");
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("id", category.ID);
+                    command.Parameters.AddWithValue("name", category.Name);
+                    command.Parameters.AddWithValue("description", category.Description);
+
+                    if (!isMainCategory)
+                    {
+                        command.Parameters.AddWithValue("parentID", (category.ParentCategory == null)
+                                                        ? Guid.Empty : category.ParentCategory?.ID ?? Guid.Empty);
+                    }
+
+                    con.Open();
+                    int rowCount = command.ExecuteNonQuery();
+
+                    command.Dispose();
+                    con.Close();
+
+                    if (rowCount == 0)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
 
         public ICategory GetCategoryByID(Guid id)
         {
-            ICategory category = new Category();
+            ICategory category = null;
             string sql = "SELECT * FROM " + SQLDbHelper.CategoryTable + " WHERE ID = @ID";
 
             using (var con = Connection)
@@ -148,6 +190,18 @@ namespace SGEGService.Repository.SQLRepo
 
         public bool SaveCategory(ICategory category)
         {
+            if (GetCategoryByID(category.ID) == null)
+            {
+                return InsertCategory(category);
+            }
+            else
+            {
+                return UpdateCategory(category);
+            }
+        }
+
+        public bool InsertCategory(ICategory category)
+        {
             bool isMainCategory = false;
 
 
@@ -177,17 +231,7 @@ namespace SGEGService.Repository.SQLRepo
                     command.Dispose();
                     con.Close();
 
-                    List<bool> results = new List<bool>();
-                    if (!isMainCategory)
-                    { 
-                        if (category.ParentCategory != null)
-                            SaveCategory(category.ParentCategory);
-                    }
-
-                    if (category.SubCategories != null && category.SubCategories.Count != 0)
-                        category.SubCategories.ForEach(c => results.Add(SaveCategory(c)));
-
-                    if (rowCount == 0 || results.Contains(false))
+                    if (rowCount == 0)
                     {
                         return false;
                     }
@@ -201,30 +245,27 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
-        /// <summary>
-        /// Read category informations from DB.
-        /// Does not completly set Parent Category, only the id.
-        /// Does not set subCategories, would cause redundant function call.
-        /// </summary>
-        /// <param name="dr"></param>
-        /// <returns></returns>
         public Category ParseCategory(SqlDataReader dr)
         {
             try
             {
                 var ID = SQLDbHelper.GetGuid(dr, "ID");
                 var name = SQLDbHelper.GetValueOrDefault(dr, "Name", "");
-                var parentCategory = new Category() { ID = SQLDbHelper.GetGuid(dr, "ParentID") }; 
+                var parentCategoryID = SQLDbHelper.GetGuid(dr, "ParentID");
+                Category parentCategory = null;
+                if (parentCategoryID != Guid.Empty)
+                    parentCategory = (Category)GetCategoryByID(parentCategoryID); 
                 var description = SQLDbHelper.GetValueOrDefault(dr, "Description", "");
-                //var subCategories = GetSubCategoriesByID(ID);
+
+                var subCategories = GetSubCategoriesByID(ID);
 
                 return new Category()
                 {
                     ID = ID,
                     Name = name,
                     ParentCategory = parentCategory,
-                    Description = description
-                    //SubCategories = subCategories
+                    Description = description,
+                    SubCategories = subCategories
                 };
             }
             catch (Exception ex)

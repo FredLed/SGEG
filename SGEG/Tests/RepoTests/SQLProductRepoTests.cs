@@ -66,5 +66,21 @@ namespace Tests.RepoTests
             Assert.That(res, Is.True);
         }
 
+        [Test]
+        public void CanUpdateProduct()
+        {
+            IProduct product = SQLRepoTestsHelper.CreateValidProduct();
+            IProductRepo repo = new SQLProductRepo();
+
+            repo.SaveProduct(product);
+            Product dbProduct = (Product)repo.GetProductByID(product.ID);
+            dbProduct.Description += "_Changed";
+            dbProduct.Name += "_Changed";
+
+            var res = repo.SaveProduct(dbProduct);
+
+            Assert.That(res, Is.True);
+        }
+
     }
 }

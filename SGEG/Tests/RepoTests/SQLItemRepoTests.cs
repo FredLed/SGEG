@@ -59,9 +59,25 @@ namespace Tests.RepoTests
             IItemRepo repo = new SQLItemRepo();
 
             repo.SaveItem(item);
-            var dbItem = repo.Items.First(p => p.ID == item.ID);
+            var dbItem = repo.GetItemByID(item.ID);
 
             var res = SQLRepoTestsHelper.Compare(dbItem, item);
+
+            Assert.That(res, Is.True);
+        }
+
+        [Test]
+        public void CanUpdateItem()
+        {
+            IItem item = SQLRepoTestsHelper.CreateValidItem();
+            IItemRepo repo = new SQLItemRepo();
+
+            repo.SaveItem(item);
+            Item dbItem = (Item)repo.GetItemByID(item.ID);
+            dbItem.SerialNumber += "_Changed";
+            dbItem.ReceptionDate = DateTime.Now;
+
+            var res = repo.SaveItem(dbItem);
 
             Assert.That(res, Is.True);
         }

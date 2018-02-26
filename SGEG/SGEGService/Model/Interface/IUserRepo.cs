@@ -14,6 +14,8 @@ namespace SGEGService.Model.Interface
 
         bool DeleteUserByID(Guid id);
 
-        IUser GetUserByUsername(string username);
+        IUser GetUserByName(string username);
+
+        IUser GetUserByID(Guid id);
     }
 }

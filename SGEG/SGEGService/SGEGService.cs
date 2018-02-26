@@ -25,7 +25,6 @@ namespace SGEGService
             productRepo = new SQLProductRepo();
             itemRepo = new SQLItemRepo();
             userRepo = new SQLUserRepo();
-            currentUser = new User() { ID = Guid.Empty };
         }
 
         public bool AddProduct(IProduct product)
@@ -227,7 +226,7 @@ namespace SGEGService
         {
             try
             {
-                return userRepo.GetUserByUsername(username);
+                return userRepo.GetUserByName(username);
             }
             catch (Exception ex)
             {
@@ -237,17 +236,26 @@ namespace SGEGService
 
         public bool Login(string username, string password)
         {
-            if (currentUser.ID == Guid.Empty)
+            try
             {
-                //TODO
+                if (currentUser == null || currentUser.ID == Guid.Empty)
+                {
+                    currentUser = userRepo.GetUserByName(username);
+                    return true;
+                }
             }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
 
             return false;
         }
 
-        public bool Logout()
+        public void Logout()
         {
-            throw new NotImplementedException();
+            currentUser = null;
         }
     }
 }

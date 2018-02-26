@@ -65,5 +65,21 @@ namespace Tests.RepoTests
 
             Assert.That(res, Is.True);
         }
+
+        [Test]
+        public void CanUpdateCategory()
+        {
+            ICategory category = SQLRepoTestsHelper.CreateValidCategory();
+            ICategoryRepo repo = new SQLCategoryRepo();
+
+            repo.SaveCategory(category);
+            Category dbCat = (Category)repo.GetCategoryByID(category.ID);
+            dbCat.Description += "_Changed";
+            dbCat.Name += "_Changed";
+
+            var res = repo.SaveCategory(dbCat);
+
+            Assert.That(res, Is.True);
+        }
     }
 }

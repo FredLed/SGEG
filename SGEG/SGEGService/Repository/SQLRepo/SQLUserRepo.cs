@@ -76,7 +76,43 @@ namespace SGEGService.Repository.SQLRepo
             }
         }
 
-        public bool SaveUser(IUser user)
+        public bool UpdateUser(IUser user)
+        {
+            string sql = "UPDATE " + SQLDbHelper.UserTable 
+                            + " SET Email = @email, CartID = @cartID, Address = @address "
+                            + " WHERE ID = @id";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("id", user.ID);
+                    command.Parameters.AddWithValue("email", user.Email);
+                    command.Parameters.AddWithValue("cartID", "TODO");
+                    command.Parameters.AddWithValue("address", user.Address);
+
+                    con.Open();
+                    int rowCount = command.ExecuteNonQuery();
+
+                    command.Dispose();
+                    con.Close();
+
+                    if (rowCount == 0)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        private bool InsertUser(IUser user)
         {
             string sql = "INSERT INTO " + SQLDbHelper.UserTable + " (ID,UserName,Password,Email,CreationDate,CartID,Address) "
                             + " VALUES (@ID,@userName,@password,@email,@creationDate,@cartID,@address)";
@@ -111,6 +147,84 @@ namespace SGEGService.Repository.SQLRepo
                 {
                     throw;
                 }
+            }
+        }
+
+        public IUser GetUserByName(string username)
+        {
+            IUser user = null;
+            string sql = "SELECT * FROM " + SQLDbHelper.UserTable + " WHERE Name = @name";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("name", username);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        user = ParseUser(dr);
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return user;
+        }
+
+        public IUser GetUserByID(Guid id)
+        {
+            IUser user = null;
+            string sql = "SELECT * FROM " + SQLDbHelper.UserTable + " WHERE ID = @id";
+
+            using (var con = Connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(sql, con);
+                    command.Parameters.AddWithValue("id", id);
+
+                    con.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        user = ParseUser(dr);
+                    }
+
+                    dr.Close();
+                    command.Dispose();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return user;
+        }
+
+        public bool SaveUser(IUser user)
+        {
+            if (GetUserByID(user.ID) == null)
+            {
+                return InsertUser(user);
+            }
+            else
+            {
+                return UpdateUser(user);
             }
         }
 

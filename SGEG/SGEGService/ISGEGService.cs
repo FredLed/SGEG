@@ -18,13 +18,13 @@ namespace SGEGService
         bool SignUp(IUser user);
 
         [OperationContract]
-        IUser GetUser();
+        IUser GetUser(string username);
 
         [OperationContract]
-        bool Login(IUser user);
+        bool Login(string username, string password);
 
         [OperationContract]
-        bool Logout();
+        void Logout();
 
         [OperationContract]
         bool AddProduct(IProduct product);

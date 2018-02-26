@@ -51,5 +51,35 @@ namespace Tests.RepoTests
 
             Assert.That(count + 1, Is.EqualTo(finalCount));
         }
+
+        [Test]
+        public void DataFromDbIsEqual()
+        {
+            IUser user = SQLRepoTestsHelper.CreateValidUser();
+            IUserRepo repo = new SQLUserRepo();
+            
+            repo.SaveUser(user);
+            IUser dbUser = repo.GetUserByID(user.ID);
+
+            var res = SQLRepoTestsHelper.Compare(user, dbUser);
+
+            Assert.That(res, Is.True);
+        }
+
+        [Test]
+        public void CanUpdateUser()
+        {
+            IUser user = SQLRepoTestsHelper.CreateValidUser();
+            IUserRepo repo = new SQLUserRepo();
+
+            repo.SaveUser(user);
+            User dbUser = (User)repo.GetUserByID(user.ID);
+            dbUser.Email += "_Changed";
+            dbUser.Address += "_Changed";
+
+            var res = repo.SaveUser(dbUser);
+
+            Assert.That(res, Is.True);
+        }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="RepoTests\SQLRepoTestsHelper.cs" />
     <Compile Include="RepoTests\SQLUserRepoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SGEGServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
