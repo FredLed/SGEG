@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{115D867B-0C01-4F38-9D4E-DCACE0C5E450}</ProjectGuid>
+    <ProjectGuid>{D377A1EC-523A-4AB3-85D3-432465F9A7D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SGEGService</RootNamespace>
-    <AssemblyName>SGEGService</AssemblyName>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,11 +32,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,34 +49,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\Interface\ICategory.cs" />
-    <Compile Include="Model\Interface\ICategoryRepo.cs" />
-    <Compile Include="Model\Interface\IDbConnection.cs" />
-    <Compile Include="Model\Interface\IItem.cs" />
-    <Compile Include="Model\Interface\IItemRepo.cs" />
-    <Compile Include="Model\Interface\IProduct.cs" />
-    <Compile Include="Model\Interface\IProductRepo.cs" />
-    <Compile Include="Model\Item.cs" />
-    <Compile Include="Model\Interface\IUser.cs" />
-    <Compile Include="Model\Interface\IUserRepo.cs" />
-    <Compile Include="Model\Product.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="ISGEGService.cs" />
+    <Compile Include="RepoTests\SQLCategoryRepoTests.cs" />
+    <Compile Include="RepoTests\SQLItemRepoTests.cs" />
+    <Compile Include="RepoTests\SQLProductRepoTests.cs" />
+    <Compile Include="RepoTests\SQLRepoTestsHelper.cs" />
+    <Compile Include="RepoTests\SQLUserRepoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\SQLRepo\SQLCategoryRepo.cs" />
-    <Compile Include="Repository\SQLRepo\SQLDbConnection.cs" />
-    <Compile Include="Repository\SQLRepo\SQLDbHelper.cs" />
-    <Compile Include="Repository\SQLRepo\SQLItemRepo.cs" />
-    <Compile Include="Repository\SQLRepo\SQLProductRepo.cs" />
-    <Compile Include="Repository\SQLRepo\SQLUserRepo.cs" />
-    <Compile Include="SGEGService.cs" />
+    <Compile Include="SGEGServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SGEGService\SGEGService.csproj">
+      <Project>{115d867b-0c01-4f38-9d4e-dcace0c5e450}</Project>
+      <Name>SGEGService</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
+  </Target>
 </Project>
