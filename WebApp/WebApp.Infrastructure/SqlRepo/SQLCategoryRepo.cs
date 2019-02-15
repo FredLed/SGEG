@@ -47,7 +47,7 @@ namespace WebApp.Infrastructure.SqlRepo
         {
             string sql = "DELETE FROM " + SqlDbHelper.CategoryTable + " WHERE Id = @id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -85,7 +85,7 @@ namespace WebApp.Infrastructure.SqlRepo
                             ? " WHERE Id = @id"
                             : ", ParentId = @parentId WHERE Id = @id");
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -125,7 +125,7 @@ namespace WebApp.Infrastructure.SqlRepo
             ICategory category = null;
             string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE Id = @Id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -158,7 +158,7 @@ namespace WebApp.Infrastructure.SqlRepo
             List<ICategory> categories = new List<ICategory>();
             string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE ParentId = @parentId";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -208,7 +208,7 @@ namespace WebApp.Infrastructure.SqlRepo
                             ? ")  VALUES (@Id,@name,@description)"
                             : ",ParentId) VALUES (@Id,@name,@description, @parentId)");
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {

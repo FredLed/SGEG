@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebApp.BL
+namespace WebApp.Areas
 {
     public class ApplicationDbContext : IdentityDbContext
     {

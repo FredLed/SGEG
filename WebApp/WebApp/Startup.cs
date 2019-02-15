@@ -13,6 +13,7 @@ using WebApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using WebApp.Areas;
 using WebApp.BL;
 
 namespace WebApp

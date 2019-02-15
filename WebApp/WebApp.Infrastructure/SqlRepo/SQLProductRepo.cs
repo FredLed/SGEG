@@ -12,9 +12,9 @@ namespace WebApp.Infrastructure.SqlRepo
         public List<IProduct> GetAllProducts()
         {
             List<IProduct> products = new List<IProduct>();
-            string sql = "SELECT * FROM " + SQLDbHelper.ProductTable;
+            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable;
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -46,9 +46,9 @@ namespace WebApp.Infrastructure.SqlRepo
         public IProduct GetProductById(Guid id)
         {
             IProduct product = null;
-            string sql = "SELECT * FROM " + SQLDbHelper.ProductTable + " WHERE Id = @Id";
+            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE Id = @Id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -78,9 +78,9 @@ namespace WebApp.Infrastructure.SqlRepo
 
         public bool DeleteProductById(Guid Id)
         {
-            string sql = "DELETE FROM " + SQLDbHelper.ProductTable + " WHERE Id = @Id";
+            string sql = "DELETE FROM " + SqlDbHelper.ProductTable + " WHERE Id = @Id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -109,11 +109,11 @@ namespace WebApp.Infrastructure.SqlRepo
 
         public bool UpdateProduct(IProduct product)
         {
-            string sql = "UPDATE " + SQLDbHelper.ProductTable
+            string sql = "UPDATE " + SqlDbHelper.ProductTable
                             + " SET Name = @name, MSRP = @msrp, Description = @description, CUP = @cup "
                             + " WHERE Id = @id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -146,10 +146,10 @@ namespace WebApp.Infrastructure.SqlRepo
 
         public bool InsertProduct(IProduct product)
         {
-            string sql = "INSERT INTO " + SQLDbHelper.ProductTable + " (Id,Name,MSRP,Description,CreationDate,CUP) "
+            string sql = "INSERT INTO " + SqlDbHelper.ProductTable + " (Id,Name,MSRP,Description,CreationDate,CUP) "
                            + " VALUES (@Id,@Name,@MSRP,@Description,@CreationDate,@CUP)";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -196,9 +196,9 @@ namespace WebApp.Infrastructure.SqlRepo
         public IEnumerable<IProduct> GetProductsByCategory(ICategory category)
         {
             List<IProduct> products = new List<IProduct>();
-            string sql = "SELECT * FROM " + SQLDbHelper.ProductTable + " WHERE CategoryId = @categoryId";
+            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE CategoryId = @categoryId";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -232,12 +232,12 @@ namespace WebApp.Infrastructure.SqlRepo
             {
                 return new Product()
                 {
-                    Id = SQLDbHelper.GetGuid(dr, "Id"),
-                    Name = SQLDbHelper.GetValueOrDefault(dr, "Name", ""),
-                    MSRP = SQLDbHelper.GetDouble(dr, "MSRP"),
-                    CreationDate = SQLDbHelper.GetDateTime(dr, "CreationDate"),
-                    CUP = SQLDbHelper.GetValueOrDefault(dr, "CUP", ""),
-                    Description = SQLDbHelper.GetValueOrDefault(dr, "Description", "")
+                    Id = SqlDbHelper.GetGuid(dr, "Id"),
+                    Name = SqlDbHelper.GetValueOrDefault(dr, "Name", ""),
+                    MSRP = SqlDbHelper.GetDouble(dr, "MSRP"),
+                    CreationDate = SqlDbHelper.GetDateTime(dr, "CreationDate"),
+                    CUP = SqlDbHelper.GetValueOrDefault(dr, "CUP", ""),
+                    Description = SqlDbHelper.GetValueOrDefault(dr, "Description", "")
                 };
             }
             catch (Exception ex)

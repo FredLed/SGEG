@@ -15,7 +15,7 @@ namespace WebApp.Infrastructure.SqlRepo
             List<IItem> items = new List<IItem>();
             string sql = "SELECT * FROM " + SqlDbHelper.ItemTable;
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -48,7 +48,7 @@ namespace WebApp.Infrastructure.SqlRepo
         {
             string sql = "DELETE FROM " + SqlDbHelper.ItemTable + " WHERE Id = @Id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace WebApp.Infrastructure.SqlRepo
                         + " SET ProductId = @productId, Cost = @cost, SerialNumber = @serialNumber, ReceptionDate = @receptionDate "
                             + " WHERE Id = @id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -117,7 +117,7 @@ namespace WebApp.Infrastructure.SqlRepo
             IItem item = null;
             string sql = "SELECT * FROM " + SqlDbHelper.ItemTable + " WHERE Id = @id";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -162,7 +162,7 @@ namespace WebApp.Infrastructure.SqlRepo
             string sql = "INSERT INTO " + SqlDbHelper.ItemTable + " (Id,ProductId,Cost,SerialNumber,CreationDate,ReceptionDate) "
                             + " VALUES (@Id,@productId,@cost,@serialNumber,@creationDate,@receptionDate)";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
@@ -199,7 +199,7 @@ namespace WebApp.Infrastructure.SqlRepo
             List<IItem> items = new List<IItem>();
             string sql = "SELECT * FROM " + SqlDbHelper.ItemTable + " WHERE ProductId = @productId";
 
-            using (var con = Connection)
+            using (var con = new SqlConnection())
             {
                 try
                 {
