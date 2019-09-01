@@ -1,0 +1,36 @@
+﻿@page
+@model WebApp.Pages.Category.CreateCategoryModel
+@{
+    ViewData["Title"] = "CreateCategory";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<br />
+<h2>Create Category</h2>
+<hr />
+@{
+    using (Html.BeginForm("CreateCategory", "Category", FormMethod.Post))
+    {
+    <div class="input-group form-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Category name :</span>
+        </div>
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Description :</span>
+        </div>
+        <textarea class="form-control" aria-label="Description"></textarea>
+    </div>
+
+    <div class="input-group form-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1">
+    </div>
+    <br />
+    <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
+    }
+}
