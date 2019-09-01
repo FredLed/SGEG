@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebApp.BL.Interface
 {
-    public interface IProductRepo
+    public interface IProductRepository
     {
         List<IProduct> Products { get; }
 

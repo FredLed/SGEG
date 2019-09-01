@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebApp.BL.Interface
 {
-    public interface ICategoryRepo
+    public interface ICategoryRepository
     {
         List<ICategory> Caterogies { get; }
 

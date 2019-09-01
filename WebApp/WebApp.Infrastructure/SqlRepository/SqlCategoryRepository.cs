@@ -5,16 +5,21 @@ using System.Data.SqlClient;
 using WebApp.BL;
 using WebApp.BL.Interface;
 
-namespace WebApp.Infrastructure.SqlRepo
+namespace WebApp.Infrastructure.SqlRepository
 {
-    public class SqlCategoryRepo : ICategoryRepo
+    public class SqlCategoryRepository : SqlRepositoryConnection, ICategoryRepository
     {
+        public SqlCategoryRepository(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
         private List<ICategory> GetAllCategories()
         {
             List<ICategory> categories = new List<ICategory>();
             string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable;
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -45,9 +50,9 @@ namespace WebApp.Infrastructure.SqlRepo
 
         public bool DeleteCategoryById(Guid id)
         {
-            string sql = "DELETE FROM " + SqlDbHelper.CategoryTable + " WHERE Id = @id";
+            string sql = "DELETE FROM " + SqlDbHelper.CategoryTable + " WHERE CategoryID = @id";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -83,9 +88,9 @@ namespace WebApp.Infrastructure.SqlRepo
                             + " SET Name = @name, Description = @description"
                             + ((isMainCategory = category.ParentCategory == null || category.ParentCategory.Id == Guid.Empty)
                             ? " WHERE Id = @id"
-                            : ", ParentId = @parentId WHERE Id = @id");
+                            : ", ParentCategoryID = @parentId WHERE CategoryID = @id");
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -96,7 +101,7 @@ namespace WebApp.Infrastructure.SqlRepo
 
                     if (!isMainCategory)
                     {
-                        command.Parameters.AddWithValue("parentId", (category.ParentCategory == null)
+                        command.Parameters.AddWithValue("parentId", category.ParentCategory == null
                                                         ? Guid.Empty : category.ParentCategory?.Id ?? Guid.Empty);
                     }
 
@@ -123,9 +128,9 @@ namespace WebApp.Infrastructure.SqlRepo
         public ICategory GetCategoryById(Guid id)
         {
             ICategory category = null;
-            string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE Id = @Id";
+            string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE CategoryID = @Id";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -156,9 +161,9 @@ namespace WebApp.Infrastructure.SqlRepo
         public List<ICategory> GetSubCategoriesById(Guid id)
         {
             List<ICategory> categories = new List<ICategory>();
-            string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE ParentId = @parentId";
+            string sql = "SELECT * FROM " + SqlDbHelper.CategoryTable + " WHERE ParentCategoryID = @parentId";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -203,23 +208,23 @@ namespace WebApp.Infrastructure.SqlRepo
             bool isMainCategory = false;
 
 
-            string sql = "INSERT INTO " + SqlDbHelper.CategoryTable + " (Id,Name,Description"
+            string sql = "INSERT INTO " + SqlDbHelper.CategoryTable + " (CategoryID,Name,Description"
                             + ((isMainCategory = category.ParentCategory == null || category.ParentCategory.Id == Guid.Empty)
                             ? ")  VALUES (@Id,@name,@description)"
-                            : ",ParentId) VALUES (@Id,@name,@description, @parentId)");
+                            : ",ParentCategoryID) VALUES (@Id,@name,@description, @parentId)");
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
                     SqlCommand command = new SqlCommand(sql, con);
                     command.Parameters.AddWithValue("Id", category.Id);
                     command.Parameters.AddWithValue("name", category.Name);
-                    command.Parameters.AddWithValue("description", category.Description);
+                    command.Parameters.AddWithValue("description", category?.Description ?? string.Empty);
 
                     if (!isMainCategory)
                     {
-                        command.Parameters.AddWithValue("parentId", (category.ParentCategory == null)
+                        command.Parameters.AddWithValue("parentId", category.ParentCategory == null
                                                         ? Guid.Empty : category.ParentCategory?.Id ?? Guid.Empty);
                     }
 
@@ -247,13 +252,13 @@ namespace WebApp.Infrastructure.SqlRepo
         {
             try
             {
-                var Id = SqlDbHelper.GetGuid(dr, "Id");
-                var name = SqlDbHelper.GetValueOrDefault(dr, "Name", "");
-                var parentCategoryId = SqlDbHelper.GetGuid(dr, "ParentId");
+                var Id = dr.GetGuid("Id");
+                var name = dr.GetValueOrDefault("Name", "");
+                var parentCategoryId = dr.GetGuid("ParentId");
                 Category parentCategory = null;
                 if (parentCategoryId != Guid.Empty)
                     parentCategory = (Category)GetCategoryById(parentCategoryId);
-                var description = SqlDbHelper.GetValueOrDefault(dr, "Description", "");
+                var description = dr.GetValueOrDefault("Description", "");
 
                 var subCategories = GetSubCategoriesById(Id);
 

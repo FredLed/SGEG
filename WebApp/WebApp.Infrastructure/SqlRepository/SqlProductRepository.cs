@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 using WebApp.BL;
 using WebApp.BL.Interface;
 
-namespace WebApp.Infrastructure.SqlRepo
+namespace WebApp.Infrastructure.SqlRepository
 {
-    public class SqlProductRepo : IProductRepo
+    public class SqlProductRepository : IProductRepository
     {
         public List<IProduct> GetAllProducts()
         {
@@ -232,12 +232,12 @@ namespace WebApp.Infrastructure.SqlRepo
             {
                 return new Product()
                 {
-                    Id = SqlDbHelper.GetGuid(dr, "Id"),
-                    Name = SqlDbHelper.GetValueOrDefault(dr, "Name", ""),
-                    MSRP = SqlDbHelper.GetDouble(dr, "MSRP"),
-                    CreationDate = SqlDbHelper.GetDateTime(dr, "CreationDate"),
-                    CUP = SqlDbHelper.GetValueOrDefault(dr, "CUP", ""),
-                    Description = SqlDbHelper.GetValueOrDefault(dr, "Description", "")
+                    Id = dr.GetGuid("Id"),
+                    Name = dr.GetValueOrDefault("Name", ""),
+                    MSRP = dr.GetDouble("MSRP"),
+                    CreationDate = dr.GetDateTime("CreationDate"),
+                    CUP = dr.GetValueOrDefault("CUP", ""),
+                    Description = dr.GetValueOrDefault("Description", "")
                 };
             }
             catch (Exception ex)

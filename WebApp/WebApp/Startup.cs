@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using WebApp.Areas;
 using WebApp.BL;
+using WebApp.BL.Interface;
+using WebApp.Infrastructure.SqlRepository;
 
 namespace WebApp
 {
@@ -46,12 +48,12 @@ namespace WebApp
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
+                //options.Password.RequireDigit = true;
+                //options.Password.RequireLowercase = true;
+                //options.Password.RequireNonAlphanumeric = true;
+                //options.Password.RequireUppercase = true;
+                //options.Password.RequiredLength = 6;
+                //options.Password.RequiredUniqueChars = 1;
 
                 // Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -74,6 +76,10 @@ namespace WebApp
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            ICategoryRepository categoryRepository = new SqlCategoryRepository(Configuration.GetConnectionString("DefaultConnection"));
+
+            services.AddSingleton<ICategoryRepository>(categoryRepository);
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

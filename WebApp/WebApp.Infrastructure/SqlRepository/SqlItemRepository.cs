@@ -6,9 +6,9 @@ using System.Linq;
 using WebApp.BL;
 using WebApp.BL.Interface;
 
-namespace WebApp.Infrastructure.SqlRepo
+namespace WebApp.Infrastructure.SqlRepository
 {
-    public class SqlItemRepo : IItemRepo
+    public class SqlItemRepository : IItemRepository
     {
         public IEnumerable<IItem> GetAllItems()
         {
@@ -231,18 +231,18 @@ namespace WebApp.Infrastructure.SqlRepo
         {
             try
             {
-                var productId = SqlDbHelper.GetGuid(dr, "ProductId");
-                var productRepo = new SqlProductRepo();
+                var productId = dr.GetGuid("ProductId");
+                var productRepo = new SqlProductRepository();
                 var product = productRepo.GetProductById(productId);
 
                 return new Item()
                 {
-                    Id = SqlDbHelper.GetGuid(dr, "Id"),
+                    Id = dr.GetGuid("Id"),
                     Product = product,
-                    Cost = SqlDbHelper.GetDouble(dr, "Cost"),
-                    CreationDate = SqlDbHelper.GetDateTime(dr, "CreationDate"),
-                    ReceptionDate = SqlDbHelper.GetDateTime(dr, "ReceptionDate"),
-                    SerialNumber = SqlDbHelper.GetValueOrDefault(dr, "SerialNumber", "")
+                    Cost = dr.GetDouble("Cost"),
+                    CreationDate = dr.GetDateTime("CreationDate"),
+                    ReceptionDate = dr.GetDateTime("ReceptionDate"),
+                    SerialNumber = dr.GetValueOrDefault("SerialNumber", "")
                 };
             }
             catch (Exception ex)
