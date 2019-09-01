@@ -21,7 +21,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text">Description :</span>
         </div>
-        <textarea class="form-control" aria-label="Description"></textarea>
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
     </div>
 
     <div class="input-group form-group mb-3">

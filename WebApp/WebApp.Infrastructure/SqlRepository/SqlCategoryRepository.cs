@@ -252,9 +252,9 @@ namespace WebApp.Infrastructure.SqlRepository
         {
             try
             {
-                var Id = dr.GetGuid("Id");
+                var Id = dr.GetGuid("CategoryID");
                 var name = dr.GetValueOrDefault("Name", "");
-                var parentCategoryId = dr.GetGuid("ParentId");
+                var parentCategoryId = dr.GetGuid("ParentCategoryID");
                 Category parentCategory = null;
                 if (parentCategoryId != Guid.Empty)
                     parentCategory = (Category)GetCategoryById(parentCategoryId);
