@@ -1,9 +1,40 @@
 ﻿@page
+@using BL.Interface
 @model WebApp.Pages.Category.ListCategoryModel
 @{
-    ViewData["Title"] = "ListCategory";
+    ViewBag.Title = "ListCategory";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var modelData = ViewBag.Model as ListCategoryModel;
 }
+<h2>Category list</h2>
 
-<h2>ListCategory</h2>
-
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Parent Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (modelData.Categories != null && modelData.Categories.Any())
+        {
+            foreach (ICategory cat in modelData.Categories)
+            {
+                <tr>
+                    <th scope="row">@cat.Id</th>
+                    <td>@cat.Name</td>
+                    <td>@cat.Description</td>
+                    <td>@cat?.ParentCategory?.Name</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                No category yet
+            </tr>
+        }
+    </tbody>
+</table>

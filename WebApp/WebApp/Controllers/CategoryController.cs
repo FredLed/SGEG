@@ -21,20 +21,22 @@ namespace WebApp.Controller
         {
             _categoryRepository = (SqlCategoryRepository)serviceProvider.GetService(typeof(ICategoryRepository));
 
+            RefreshCategories();
+        }
+
+        private void RefreshCategories()
+        {
             Categories = _categoryRepository.Caterogies;
         }
 
-        // GET: Category/List
-        //[HttpGet("Category/List")]
-        //public ActionResult List()
-        //{
-        //    ViewData.Model = new ListModel()
-        //    {
-        //        Categories = Categories.ToList()
-        //    };
-
-        //    return View();
-        //}
+        //GET: Category/List
+        [HttpGet("Category/List")]
+        public ActionResult List()
+        {
+            RefreshCategories();
+            ViewBag.Model = new ListCategoryModel { Categories = Categories.ToList() };
+            return View("ListCategory");
+        }
 
         [HttpGet]
         public IActionResult Index()
@@ -60,7 +62,8 @@ namespace WebApp.Controller
 
                 if (_categoryRepository.SaveCategory(newCat))
                 {
-                    return View("");
+
+                    return Redirect(Url.Action("List"));
                 }
                 else
                 {

@@ -17,6 +17,7 @@ using WebApp.Areas;
 using WebApp.BL;
 using WebApp.BL.Interface;
 using WebApp.Infrastructure.SqlRepository;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace WebApp
 {
@@ -81,8 +82,15 @@ namespace WebApp
 
             services.AddSingleton<ICategoryRepository>(categoryRepository);
 
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                // {2} is area, {1} is controller,{0} is the action    
+                //o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/Pages/{1}/{0}" + RazorViewEngine.ViewExtension);              
+            });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,20 +107,13 @@ namespace WebApp
                 app.UseHsts();
             }
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
