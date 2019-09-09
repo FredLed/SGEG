@@ -29,6 +29,15 @@ namespace WebApp.Controller
             Categories = _categoryRepository.Caterogies;
         }
 
+        //GET: Category/View
+        [HttpGet("Category/ViewCategory")]
+        public ActionResult ViewCategory(Guid id)
+        {
+            RefreshCategories();
+            ViewBag.Model = new ViewCategoryModel { Category = Categories.FirstOrDefault(c => c.Id.Equals(id)) };
+            return View("ViewCategory");
+        }
+
         //GET: Category/List
         [HttpGet("Category/List")]
         public ActionResult List()
@@ -42,6 +51,49 @@ namespace WebApp.Controller
         public IActionResult Index()
         {
             return View();
+        }
+
+        //GET: Category/Edit
+        [HttpGet("Category/EditCategory")]
+        public ActionResult EditCategory(Guid id)
+        {
+            RefreshCategories();
+            ViewBag.Model = new CreateCategoryModel(Categories.FirstOrDefault(c => c.Id.Equals(id)));
+            return View("CreateCategory");
+        }
+
+        //Post: Category/Edit
+        [HttpPost("Category/Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(IFormCollection collection)
+        {
+            try
+            {
+                var id = collection["name"];
+                var name = collection["name"];
+                var description = collection["description"];
+                //var parentCategory = null;
+                //var subCategories = null;
+
+                var category = (Category)Categories.FirstOrDefault(c => c.Id.Equals(id));
+
+                category.Name = name;
+                category.Description = description;
+
+                if (_categoryRepository.SaveCategory(category))
+                {
+
+                    return Redirect(Url.Action("List"));
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
+            {
+                return View();
+            }
         }
 
         // POST: Category/Create

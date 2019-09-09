@@ -1,36 +1,70 @@
 ﻿@page
 @model WebApp.Pages.Category.CreateCategoryModel
 @{
-    ViewData["Title"] = "CreateCategory";
+    //ViewData["Title"] = "CreateCategory";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+
+    var editModel = ViewBag.Model as CreateCategoryModel;
 }
 <br />
-<h2>Create Category</h2>
-<hr />
-@{
+
+@if (editModel == null)
+{
+    <h2>Create Category</h2>
+    <hr />
     using (Html.BeginForm("Create", "Category", FormMethod.Post))
     {
-    <div class="input-group form-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Category name :</span>
+        <div class="input-group form-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Category name :</span>
+            </div>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
         </div>
-        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-    </div>
 
-    <div class="input-group form-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Description :</span>
+        <div class="input-group form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description :</span>
+            </div>
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
         </div>
-        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
-    </div>
 
-    <div class="input-group form-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+        <div class="input-group form-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1">
         </div>
-        <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1">
+        <br />
+        <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
+    }
+}
+else
+{
+    <h2>Edit Category</h2>
+    <hr />
+    using (Html.BeginForm("Edit", "Category", FormMethod.Post))
+    {
+<div class="input-group form-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Category name :</span>
     </div>
-    <br />
-    <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
+    <input class="form-control" data-val="true" data-val-required="The Name field is required." id="Name" name="Name" type="text" value="@editModel.Name">
+</div>
+
+<div class="input-group form-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Description :</span>
+    </div>
+    <textarea class="form-control" data-val="true" data-val-required="The Description field is required." id="Description" name="Description">@editModel.Description</textarea>
+</div>
+
+        <div class="input-group form-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1">
+        </div>
+        <br />
+        <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
     }
 }

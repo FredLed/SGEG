@@ -11,7 +11,32 @@ namespace WebApp.Pages.Category
 {
     public class CreateCategoryModel : PageModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public CreateCategoryModel()
+        {
+            _id = Guid.NewGuid();
+        }
+
+        public CreateCategoryModel(ICategory category)
+        {
+            _id = category.Id;
+            Name = category.Name;
+            Description = category.Description;
+        }
+
+        private Guid _id = Guid.Empty;
+
+        public Guid Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        } 
 
         [Required]
         [Display(Name = "Name")]
