@@ -58,7 +58,7 @@ namespace WebApp.Controller
         public ActionResult EditCategory(Guid id)
         {
             RefreshCategories();
-            ViewBag.Model = new CreateCategoryModel(Categories.FirstOrDefault(c => c.Id.Equals(id)));
+            ViewBag.Model = new CreateCategoryModel(Categories.FirstOrDefault(c => c.Id.Equals(id)), Categories);
             return View("CreateCategory");
         }
 
@@ -69,13 +69,13 @@ namespace WebApp.Controller
         {
             try
             {
-                var id = collection["name"];
+                var id = collection["categorieId"];
                 var name = collection["name"];
                 var description = collection["description"];
                 //var parentCategory = null;
                 //var subCategories = null;
 
-                var category = (Category)Categories.FirstOrDefault(c => c.Id.Equals(id));
+                var category = (Category)Categories.FirstOrDefault(c => c.Id.ToString().Equals(id));
 
                 category.Name = name;
                 category.Description = description;
@@ -96,6 +96,23 @@ namespace WebApp.Controller
             }
         }
 
+        [HttpGet("Category/CreateCategory")]
+        public IActionResult CreateCategory()
+        {
+            try
+            {
+                var model = new CreateCategoryModel(Categories);
+
+                ViewBag.Model = model;
+
+                return View("CreateCategory", model);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+        
         // POST: Category/Create
         [HttpPost("Category/Create")]
         [ValidateAntiForgeryToken]
@@ -108,7 +125,7 @@ namespace WebApp.Controller
                     Id = Guid.NewGuid(),
                     Name = collection["name"],
                     Description = collection["description"],
-                    ParentCategory = null,
+                    ParentCategory = Categories.FirstOrDefault(c => c.Id.ToString().Equals(collection["selectedRadio"])),
                     SubCategories = null
                 };
 

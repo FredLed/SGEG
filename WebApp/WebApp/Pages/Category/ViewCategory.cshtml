@@ -25,9 +25,45 @@
     <label class="form-control">@viewModel.Category.Description</label>
 </div>
 
-@*<div class="input-group form-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Parent Category :</span>
-        </div>
-        <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1">
-    </div>*@
+<div class="input-group form-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+    </div>
+    <label class="form-control">@viewModel.Category?.ParentCategory?.Name</label>
+</div>
+
+<div class="input-group form-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Sub Categories :</span>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (viewModel.Category.SubCategories != null && viewModel.Category.SubCategories.Any())
+            {
+                foreach (ICategory cat in viewModel.Category.SubCategories)
+                {
+                    <tr>
+                        <th scope="row">@cat.Id</th>
+                        <td>@cat.Name</td>
+                        <td>@cat.Description</td>
+                        <td>@Html.ActionLink("View", "ViewCategory", "Category", new { id = cat.Id })</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    No category yet
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

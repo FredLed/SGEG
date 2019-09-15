@@ -30,7 +30,10 @@ namespace WebApp.Infrastructure.SqlRepository
 
                     while (dr.Read())
                     {
-                        categories.Add(ParseCategory(dr));
+                        var cat = ParseCategory(dr);
+                        cat.SubCategories = GetSubCategoriesById(cat.Id);
+
+                        categories.Add(cat);
                     }
 
                     dr.Close();
@@ -81,13 +84,13 @@ namespace WebApp.Infrastructure.SqlRepository
 
         public bool UpdateCategory(ICategory category)
         {
-            bool isMainCategory = false;
+            bool isMainCategory = category.ParentCategory == null;
 
 
             string sql = "UPDATE " + SqlDbHelper.CategoryTable
                             + " SET Name = @name, Description = @description"
-                            + ((isMainCategory = category.ParentCategory == null || category.ParentCategory.Id == Guid.Empty)
-                            ? " WHERE Id = @id"
+                            + (isMainCategory
+                            ? " WHERE CategoryID = @id"
                             : ", ParentCategoryID = @parentId WHERE CategoryID = @id");
 
             using (var con = new SqlConnection(ConnectionString))
@@ -101,8 +104,7 @@ namespace WebApp.Infrastructure.SqlRepository
 
                     if (!isMainCategory)
                     {
-                        command.Parameters.AddWithValue("parentId", category.ParentCategory == null
-                                                        ? Guid.Empty : category.ParentCategory?.Id ?? Guid.Empty);
+                        command.Parameters.AddWithValue("parentId", category.ParentCategory.Id);
                     }
 
                     con.Open();
@@ -205,11 +207,11 @@ namespace WebApp.Infrastructure.SqlRepository
 
         public bool InsertCategory(ICategory category)
         {
-            bool isMainCategory = false;
+            bool isMainCategory = category.ParentCategory == null;
 
 
             string sql = "INSERT INTO " + SqlDbHelper.CategoryTable + " (CategoryID,Name,Description"
-                            + ((isMainCategory = category.ParentCategory == null || category.ParentCategory.Id == Guid.Empty)
+                            + (isMainCategory
                             ? ")  VALUES (@Id,@name,@description)"
                             : ",ParentCategoryID) VALUES (@Id,@name,@description, @parentId)");
 
@@ -224,8 +226,7 @@ namespace WebApp.Infrastructure.SqlRepository
 
                     if (!isMainCategory)
                     {
-                        command.Parameters.AddWithValue("parentId", category.ParentCategory == null
-                                                        ? Guid.Empty : category.ParentCategory?.Id ?? Guid.Empty);
+                        command.Parameters.AddWithValue("parentId", category.ParentCategory.Id);
                     }
 
                     con.Open();
@@ -260,15 +261,13 @@ namespace WebApp.Infrastructure.SqlRepository
                     parentCategory = (Category)GetCategoryById(parentCategoryId);
                 var description = dr.GetValueOrDefault("Description", "");
 
-                var subCategories = GetSubCategoriesById(Id);
-
                 return new Category()
                 {
                     Id = Id,
                     Name = name,
                     ParentCategory = parentCategory,
                     Description = description,
-                    SubCategories = subCategories
+                    SubCategories = null
                 };
             }
             catch (Exception ex)
