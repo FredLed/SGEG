@@ -1,9 +1,32 @@
 ﻿@page
+@using BL.Interface
 @model WebApp.Pages.Product.ViewProductModel
 @{
-    ViewData["Title"] = "ViewProduct";
+    //ViewData["Title"] = "ViewProduct";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var viewModel = ViewBag.Model as ViewProductModel;
 }
 
 <h2>ViewProduct</h2>
+<hr />
 
+<div class="input-group form-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Product name :</span>
+    </div>
+    <label class="form-control">@viewModel.Product.Name</label>
+</div>
+
+<div class="input-group form-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Description :</span>
+    </div>
+    <label class="form-control">@viewModel.Product.Description</label>
+</div>
+
+@*<div class="input-group form-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+    </div>
+    <label class="form-control">@viewModel.Category?.ParentCategory?.Name</label>
+</div>*@

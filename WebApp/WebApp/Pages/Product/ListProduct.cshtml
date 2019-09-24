@@ -1,9 +1,44 @@
 ﻿@page
+@using BL.Interface
 @model WebApp.Pages.Product.ListProductModel
 @{
-    ViewData["Title"] = "ListProduct";
+    //ViewData["Title"] = "ListProduct";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+
+    var modelData = ViewBag.Model as ListProductModel;
 }
 
-<h2>ListProduct</h2>
+<h2>List Product</h2>
 
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">View</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (modelData.Products != null && modelData.Products.Any())
+        {
+            foreach (IProduct prod in modelData.Products)
+            {
+                <tr>
+                    <th scope="row">@prod.Id</th>
+                    <td>@prod.Name</td>
+                    <td>@prod.Description</td>
+                    <td>@Html.ActionLink("View", "ViewProduct", "Product", new { id = prod.Id })</td>
+                    <td>@Html.ActionLink("Edit", "EditProduct", "Product", new { id = prod.Id })</td>
+                </tr>
+            }
+        }
+        else
+        {
+        <tr>
+            No Product yet
+        </tr>
+        }
+    </tbody>
+</table>

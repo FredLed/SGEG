@@ -1,9 +1,159 @@
 ﻿@page
+@using BL.Interface
 @model WebApp.Pages.Product.CreateProductModel
 @{
-    ViewData["Title"] = "CreateProduct";
+    //ViewData["Title"] = "CreateProduct";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+
+    var editModel = ViewBag.Model as CreateProductModel;
 }
 
-<h2>CreateProduct</h2>
+<br />
 
+@if (editModel.Id == Guid.Empty)
+{
+
+    <h2>Create Product</h2>
+
+    <hr />
+    using (Html.BeginForm("Create", "Product", FormMethod.Post))
+    {
+        <div class="input-group form-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Name :</span>
+            </div>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+
+        <div class="input-group form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description :</span>
+            </div>
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+        </div>
+
+        @*<div class="input-group form-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+                </div>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Parent Category</th>
+                            <th scope="col">View</th>
+                            <th scope="col">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (categories != null && categories.Any())
+                        {
+                            foreach (ICategory cat in categories)
+                            {
+                                var radioName = "selectedRadioBtn" + cat.Id;
+
+                                <tr>
+                                    <th scope="row">@cat.Id</th>
+                                    <td>@cat.Name</td>
+                                    <td>@cat.Description</td>
+                                    <td>@cat?.ParentCategory?.Name</td>
+                                    <td>@Html.ActionLink("View", "ViewCategory", "Category", new { id = cat.Id })</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-sm">
+                                                <input id="selectedRadio" name="selectedRadio" value="@cat.Id" type="radio" aria-label="">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                No category yet
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1" style="display:none">
+            </div>*@
+        <br />
+        <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
+    }
+}
+else
+{
+    <h2>Edit Product</h2>
+    <hr />
+    using (Html.BeginForm("Edit", "Product", FormMethod.Post))
+    {
+        <input class="form-control" data-val="true" data-val-required="The Name field is required." id="productId" name="productId" type="text" value="@editModel.Id" style="display:none">
+
+        <div class="input-group form-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Name :</span>
+            </div>
+            <input class="form-control" data-val="true" data-val-required="The Name field is required." id="Name" name="Name" type="text" value="@editModel.Name">
+        </div>
+
+        <div class="input-group form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description :</span>
+            </div>
+            <textarea class="form-control" data-val="true" data-val-required="The Description field is required." id="Description" name="Description">@editModel.Description</textarea>
+        </div>
+
+        @*<div class="input-group form-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Parent Category :</span>
+                </div>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Parent Category</th>
+                            <th scope="col">View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (categories != null && categories.Any())
+                        {
+                            foreach (ICategory cat in categories)
+                            {
+                                var radioName = "selectedRadioBtn" + cat.Id;
+
+                                <tr>
+                                    <th scope="row">@cat.Id</th>
+                                    <td>@cat.Name</td>
+                                    <td>@cat.Description</td>
+                                    <td>@cat?.ParentCategory?.Name</td>
+                                    <td>@Html.ActionLink("View", "ViewCategory", "Category", new { id = cat.Id })</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-sm">
+                                                <input id="selectedRadio" name="selectedRadio" value="@cat.Id" type="radio" aria-label="">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                No category yet
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="text" class="form-control" placeholder="Parent Category" aria-label="ParentCategory" aria-describedby="basic-addon1" style="display:none">
+            </div>*@
+        <br />
+        <input id="submitBtn" type="submit" class="btn btn-primary" value="Edit">
+    }
+}

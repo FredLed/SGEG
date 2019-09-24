@@ -7,14 +7,23 @@ using WebApp.BL.Interface;
 
 namespace WebApp.Infrastructure.SqlRepository
 {
-    public class SqlProductRepository : IProductRepository
+    public class SqlProductRepository : SqlRepositoryConnection, IProductRepository
     {
+        public SqlProductRepository()
+        {
+        }
+
+        public SqlProductRepository(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
         public List<IProduct> GetAllProducts()
         {
             List<IProduct> products = new List<IProduct>();
             string sql = "SELECT * FROM " + SqlDbHelper.ProductTable;
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -46,9 +55,9 @@ namespace WebApp.Infrastructure.SqlRepository
         public IProduct GetProductById(Guid id)
         {
             IProduct product = null;
-            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE Id = @Id";
+            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE ProductID = @Id";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -78,9 +87,9 @@ namespace WebApp.Infrastructure.SqlRepository
 
         public bool DeleteProductById(Guid Id)
         {
-            string sql = "DELETE FROM " + SqlDbHelper.ProductTable + " WHERE Id = @Id";
+            string sql = "DELETE FROM " + SqlDbHelper.ProductTable + " WHERE ProductID = @Id";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -111,9 +120,9 @@ namespace WebApp.Infrastructure.SqlRepository
         {
             string sql = "UPDATE " + SqlDbHelper.ProductTable
                             + " SET Name = @name, MSRP = @msrp, Description = @description, CUP = @cup "
-                            + " WHERE Id = @id";
+                            + " WHERE ProductID = @id";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -146,10 +155,10 @@ namespace WebApp.Infrastructure.SqlRepository
 
         public bool InsertProduct(IProduct product)
         {
-            string sql = "INSERT INTO " + SqlDbHelper.ProductTable + " (Id,Name,MSRP,Description,CreationDate,CUP) "
+            string sql = "INSERT INTO " + SqlDbHelper.ProductTable + " (ProductID,Name,MSRP,Description,CreationDate,CUP) "
                            + " VALUES (@Id,@Name,@MSRP,@Description,@CreationDate,@CUP)";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -196,9 +205,9 @@ namespace WebApp.Infrastructure.SqlRepository
         public IEnumerable<IProduct> GetProductsByCategory(ICategory category)
         {
             List<IProduct> products = new List<IProduct>();
-            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE CategoryId = @categoryId";
+            string sql = "SELECT * FROM " + SqlDbHelper.ProductTable + " WHERE CategoryID = @categoryId";
 
-            using (var con = new SqlConnection())
+            using (var con = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -232,7 +241,7 @@ namespace WebApp.Infrastructure.SqlRepository
             {
                 return new Product()
                 {
-                    Id = dr.GetGuid("Id"),
+                    Id = dr.GetGuid("ProductID"),
                     Name = dr.GetValueOrDefault("Name", ""),
                     MSRP = dr.GetDouble("MSRP"),
                     CreationDate = dr.GetDateTime("CreationDate"),

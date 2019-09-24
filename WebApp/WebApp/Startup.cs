@@ -78,9 +78,12 @@ namespace WebApp
                 options.SlidingExpiration = true;
             });
 
-            ICategoryRepository categoryRepository = new SqlCategoryRepository(Configuration.GetConnectionString("DefaultConnection"));
+            var conString = Configuration.GetConnectionString("DefaultConnection");
+            ICategoryRepository categoryRepository = new SqlCategoryRepository(conString);
+            IProductRepository productRepository = new SqlProductRepository(conString);
 
             services.AddSingleton<ICategoryRepository>(categoryRepository);
+            services.AddSingleton<IProductRepository>(productRepository);
 
             services.Configure<RazorViewEngineOptions>(o =>
             {
